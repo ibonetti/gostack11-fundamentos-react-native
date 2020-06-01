@@ -29,7 +29,6 @@ const CartProvider: React.FC = ({ children }) => {
   const [products, setProducts] = useState<Product[]>([]);
 
   const storeProducts = useCallback(async () => {
-    console.log('store');
     await AsyncStorage.setItem('@cart', JSON.stringify(products));
   }, [products]);
 
@@ -58,8 +57,9 @@ const CartProvider: React.FC = ({ children }) => {
       } else {
         setProducts([...products, { ...product, quantity: 1 }]);
       }
+      await storeProducts();
     },
-    [products],
+    [products, storeProducts],
   );
 
   const increment = useCallback(
@@ -69,8 +69,9 @@ const CartProvider: React.FC = ({ children }) => {
       );
 
       setProducts(newProducts);
+      await storeProducts();
     },
-    [products],
+    [products, storeProducts],
   );
 
   const decrement = useCallback(
@@ -83,8 +84,9 @@ const CartProvider: React.FC = ({ children }) => {
       );
 
       setProducts(newProducts);
+      await storeProducts();
     },
-    [products],
+    [products, storeProducts],
   );
 
   const value = React.useMemo(
